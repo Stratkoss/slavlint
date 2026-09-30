@@ -5,3 +5,5 @@ out/
 *.tsbuildinfo
 .env*
 .vercel
+# Written by install-cursor; contains absolute paths.
+/.cursor/mcp.json

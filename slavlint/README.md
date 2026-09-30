@@ -61,7 +61,7 @@ The built-in dictionary covers 15 common UI words: položka, soubor, den, uživa
 
 Grok is optional. Only if `XAI_API_KEY` happens to be in the server's environment does `plural_forms` add an unverified `suggestion` from Grok (model override: `XAI_MODEL`). Nothing depends on it, and slavlint never writes the key anywhere.
 
-**This repo:** `.cursor/mcp.json` is already set up, both in `slavlint/` (when only that folder is open) and at the repo root (when the whole repo, including `demo/`, is open). Run `npm install` in `slavlint/`, then enable `slavlint` in Cursor Settings → MCP.
+**This repo:** `slavlint/.cursor/mcp.json` is set up for when only that folder is open. For the whole repo, including `demo/`, run `npx slavlint install-cursor` at the root. That writes `.cursor/mcp.json` with absolute paths, so the root file is gitignored. Run `npm install` in `slavlint/`, then enable `slavlint` in Cursor Settings → MCP.
 
 **Another project:** run
 
