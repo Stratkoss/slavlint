@@ -29,7 +29,8 @@ test("lists the four tools", async () => {
 
 test("lint_locale_file returns the same findings as the CLI core", async () => {
   const data = await call("lint_locale_file", { path: path.join(root, "fixtures/cs.json") });
-  assert.equal(data.errors, 2);
+  assert.equal(data.errors, 5);
+  assert.ok(data.files[0].findings.some((f: any) => f.rule === "vocative-greeting" && f.key === "greeting"));
   assert.equal(data.files[0].lang, "cs");
 });
 

@@ -33,6 +33,7 @@ The exit code is `1` if there are errors, `0` if there are only warnings or noth
 | `plural-unused` | warning | A plural suffix the language never uses (e.g. `_two` in Czech). |
 | `plural-no-variants` | warning | Text uses `{{count}}` but has no plural variants. Fine for abbreviations like `{{count}} ks`. |
 | `json-invalid` | error | The file can't be parsed. |
+| `vocative-greeting` | error | cs: a greeting with a name placeholder (`Dobrý den, {{firstName}}`, `Ahoj {{name}}`, `Vážený pane {{lastName}}`). Czech needs the vocative (`Petře`), but i18next inserts the name as-is. Not auto-fixed: decline the name in code with `vokativ` and pass it as `{{firstNameVocative}}`. |
 | `typo-nbsp-one-letter` | warning, fixable | Non-breaking space after one-letter words: cs `k s v z o u a i`, pl `w z o u i a` (any case). |
 | `typo-nbsp-unit` | warning, fixable | Non-breaking space between a number or `{{placeholder}}` and a unit: `250 ml`, `{{count}} ks`, `{{count}} szt.`. |
 | `typo-thousands` | warning, fixable | cs: `1000` → `1 000`. pl: only 5+ digits (`10000` → `10 000`); Polish doesn't group 4-digit numbers. Czech 4-digit numbers 1800–2199 are treated as years unless a unit follows. |

@@ -1,5 +1,10 @@
 {
   "title": "Můj účet",
+  "greeting": "Dobrý den, {{firstName}}",
+  "hello": "Ahoj {{name}}!",
+  "dear": "Vážený pane {{lastName}},",
+  "greetingOk": "Dobrý den, {{firstNameVocative}}",
+  "welcomeCount": "Vítejte, máte {{count}} ks v košíku",
   "cartCount_one": "V košíku je {{count}} položka",
   "cartCount_other": "V košíku je {{count}} položek",
   "files_one": "Nahrán {{count}} soubor",
