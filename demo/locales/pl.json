@@ -1,0 +1,44 @@
+{
+  "shopName": "Lada",
+  "greeting": "Dzień dobry, {{firstName}}",
+  "cartCount_one": "W koszyku jest {{count}} produkt",
+  "cartCount_few": "W koszyku są {{count}} produkty",
+  "cartCount_many": "W koszyku jest {{count}} produktów",
+  "cartCount_other": "W koszyku jest {{count}} produktu",
+  "saleDays_one": "Wyprzedaż kończy się za {{count}} dzień.",
+  "saleDays_few": "Wyprzedaż kończy się za {{count}} dni.",
+  "saleDays_many": "Wyprzedaż kończy się za {{count}} dni.",
+  "saleDays_other": "Wyprzedaż kończy się za {{count}} dnia.",
+  "language": "Język",
+  "langCs": "Čeština",
+  "langPl": "Polski",
+  "productsTitle": "Na ladzie",
+  "summaryTitle": "Podsumowanie zamówienia",
+  "emptyCart": "Koszyk jest pusty.",
+  "add": "Dodaj",
+  "addNamed": "Dodaj {{name}} do koszyka",
+  "remove": "Usuń",
+  "removeNamed": "Usuń {{name}}",
+  "pieces": "{{count}} szt.",
+  "price": "{{price, currency}}",
+  "total": "Razem {{total, currency}}",
+  "delivery": "Dostarczymy {{date, datetime}}.",
+  "products": {
+    "cup": {
+      "name": "Kubek",
+      "detail": "Kubek kamionkowy, 250 ml"
+    },
+    "cloth": {
+      "name": "Ścierka",
+      "detail": "Ścierka lniana"
+    },
+    "candle": {
+      "name": "Świeca",
+      "detail": "Świeca z wosku pszczelego"
+    },
+    "notebook": {
+      "name": "Notes",
+      "detail": "Notes w linie"
+    }
+  }
+}

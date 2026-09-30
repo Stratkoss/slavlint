@@ -1,0 +1,44 @@
+{
+  "shopName": "Lada",
+  "greeting": "Dobrý den, {{firstName}}",
+  "cartCount_one": "V košíku je {{count}} položka",
+  "cartCount_few": "V košíku jsou {{count}} položky",
+  "cartCount_many": "V košíku je {{count}} položky",
+  "cartCount_other": "V košíku je {{count}} položek",
+  "saleDays_one": "Sleva končí za {{count}} den.",
+  "saleDays_few": "Sleva končí za {{count}} dny.",
+  "saleDays_many": "Sleva končí za {{count}} dne.",
+  "saleDays_other": "Sleva končí za {{count}} dní.",
+  "language": "Jazyk",
+  "langCs": "Čeština",
+  "langPl": "Polski",
+  "productsTitle": "Na pultu",
+  "summaryTitle": "Shrnutí objednávky",
+  "emptyCart": "Košík je prázdný.",
+  "add": "Přidat",
+  "addNamed": "Přidat {{name}} do košíku",
+  "remove": "Odebrat",
+  "removeNamed": "Odebrat {{name}}",
+  "pieces": "{{count}} ks",
+  "price": "{{price, currency}}",
+  "total": "Celkem {{total, currency}}",
+  "delivery": "Doručíme {{date, datetime}}.",
+  "products": {
+    "cup": {
+      "name": "Hrnek",
+      "detail": "Kamenina, 250 ml"
+    },
+    "cloth": {
+      "name": "Utěrka",
+      "detail": "Lněná utěrka"
+    },
+    "candle": {
+      "name": "Svíčka",
+      "detail": "Včelí vosk"
+    },
+    "notebook": {
+      "name": "Zápisník",
+      "detail": "Linkovaný"
+    }
+  }
+}
