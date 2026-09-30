@@ -1,11 +1,10 @@
 {
   "mcpServers": {
     "slavlint": {
-      "command": "node",
-      "args": ["${workspaceFolder}/slavlint/dist/mcp.js"],
-      "env": {
-        "XAI_API_KEY": "${env:XAI_API_KEY}"
-      }
+      "command": "/Users/davidstratil/Library/Application Support/Herd/config/nvm/versions/node/v20.19.5/bin/node",
+      "args": [
+        "/Users/davidstratil/Projects/slavlint/slavlint/dist/mcp.js"
+      ]
     }
   }
 }

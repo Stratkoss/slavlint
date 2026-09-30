@@ -5,8 +5,9 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { TEXT_RULES, checkText, fixText, lintPath, type Lang } from "./core/index.js";
+import { pluralGuide, verifyPluralForms } from "./core/forms.js";
 import { czechVocative } from "./core/vocative.js";
-import { pluralForms } from "./grok.js";
+import { grokSuggestion } from "./grok.js";
 
 const lang = z.enum(["cs", "pl"]).describe('Language: "cs" (Czech) or "pl" (Polish)');
 
@@ -71,22 +72,34 @@ server.registerTool(
 server.registerTool(
   "plural_forms",
   {
-    title: "Plural word forms for i18next",
+    title: "Plural forms guide",
     description:
-      "Returns the Czech or Polish forms of a noun mapped to the correct Intl.PluralRules categories (cs/pl: one, few, many, other) plus a ready-to-use i18next key set. Use this whenever you write a text with {{count}}. Uses Grok when XAI_API_KEY is set, otherwise a built-in dictionary of common UI words. Results are always validated against Intl.PluralRules.",
+      "Step 1 for any text with {{count}}. Returns the plural categories Czech/Polish need (from Intl.PluralRules) with example counts and which grammatical form each takes, plus the correct forms if the word is in the built-in dictionary. You then write the forms yourself and call verify_plural_forms.",
     inputSchema: {
-      word: z.string().describe('Noun in singular, e.g. "položka", "plik" or an English word like "file"'),
+      word: z.string().describe('Noun in singular, e.g. "položka", "plik"'),
       lang,
+    },
+  },
+  async ({ word, lang }) => {
+    const guide = pluralGuide(word, lang as Lang);
+    const suggestion = await grokSuggestion(word, lang as Lang);
+    return result({ ...guide, ...(suggestion ? { suggestion: { source: "grok", forms: suggestion } } : {}) });
+  },
+);
+
+server.registerTool(
+  "verify_plural_forms",
+  {
+    title: "Verify plural forms",
+    description:
+      "Step 2: verifies the plural forms you wrote, e.g. { one: \"položka\", few: \"položky\", many: \"položky\", other: \"položek\" }. Errors for missing, empty or unknown categories; warnings when the decimal form is a copy of the 5+ form or differs from the built-in dictionary. On success returns the ready i18next key set. Checks structure and known words, not full grammar.",
+    inputSchema: {
+      lang,
+      forms: z.record(z.string(), z.string()).describe("Category -> noun form (or full text with {{count}})"),
       key: z.string().optional().describe('Base i18next key, e.g. "cart.itemCount". Defaults to "<word>Count".'),
     },
   },
-  async ({ word, lang, key }) => {
-    try {
-      return result({ ...(await pluralForms(word, lang as Lang, key)) });
-    } catch (err) {
-      return failure((err as Error).message);
-    }
-  },
+  async ({ lang, forms, key }) => result({ ...verifyPluralForms(lang as Lang, forms, key) }),
 );
 
 server.registerTool(

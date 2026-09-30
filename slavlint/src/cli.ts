@@ -14,7 +14,7 @@ Lints Czech (cs) and Polish (pl) i18next locale files.
 <path> can be a single JSON file or a folder (scanned recursively).
 
 install-cursor registers the slavlint MCP server and agent rule in
-<projectDir>/.cursor (default: current folder). Works without XAI_API_KEY.
+<projectDir>/.cursor (default: current folder). No API key needed.
 
 Options:
   --fix          Rewrite typography issues in place (plural issues are only reported)
@@ -100,13 +100,8 @@ function runInstall(projectDir: string): number {
     console.error(pc.red((err as Error).message));
     return 1;
   }
-  console.log(
-    process.env.XAI_API_KEY
-      ? pc.dim("XAI_API_KEY is set: plural_forms will ask Grok.")
-      : pc.yellow("XAI_API_KEY is not set: everything works; plural_forms uses the built-in dictionary of 15 common UI words.") +
-          pc.dim("\nTo enable Grok, export XAI_API_KEY before starting Cursor. The key is never written to mcp.json."),
-  );
-  console.log(pc.dim("Next: open the project in Cursor and enable \"slavlint\" in Settings → MCP."));
+  console.log(pc.dim("No API key needed: the agent writes plural forms, slavlint verifies them."));
+  console.log(pc.dim("Next: open the project in Cursor (or run cursor-agent there) and enable \"slavlint\" under MCP."));
   return 0;
 }
 

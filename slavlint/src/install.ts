@@ -14,8 +14,7 @@ export interface InstallResult {
 
 /**
  * Registers the slavlint MCP server in <projectDir>/.cursor/mcp.json (keeping
- * other servers) and copies the agent rule. The API key is only referenced as
- * ${env:XAI_API_KEY}, never written; without it plural_forms uses the dictionary.
+ * other servers) and copies the agent rule. No env block: the server needs no key.
  */
 export function installCursor(projectDir: string): InstallResult {
   const cursorDir = path.join(path.resolve(projectDir), ".cursor");
@@ -38,7 +37,6 @@ export function installCursor(projectDir: string): InstallResult {
     slavlint: {
       command: process.execPath,
       args: [MCP_ENTRY],
-      env: { XAI_API_KEY: "${env:XAI_API_KEY}" },
     },
   };
   fs.mkdirSync(path.dirname(rule), { recursive: true });

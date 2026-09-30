@@ -44,16 +44,23 @@ Plural categories and the example numbers in messages come from `Intl.PluralRule
 
 ## MCP server (Cursor)
 
-The same core is exposed as an MCP server over stdio (`dist/mcp.js`, bin `slavlint-mcp`).
+The same core is exposed as an MCP server over stdio (`dist/mcp.js`, bin `slavlint-mcp`). No API key is needed: the Cursor agent writes the word forms, and slavlint verifies them.
 
 | Tool | What it does |
 | --- | --- |
+| `plural_forms(word, lang)` | A guide, not a generator. Returns the categories the language needs (from `Intl.PluralRules`), example counts (cs: one `1`; few `2, 3, 4`; many `1,5`; other `0, 5, 10`), the grammatical form for each (e.g. cs many = genitive singular, used after decimals), the correct forms if the word is in the built-in dictionary, and an instruction for the agent. |
+| `verify_plural_forms(lang, forms, key?)` | Verifies agent-written forms like `{ one, few, many, other }`. Errors: missing, empty or unknown categories. Warnings: the decimal form is a copy of the 5+ form, or a form differs from the dictionary. On success, returns the ready i18next key set. It checks structure and known words, **not full grammar**. |
 | `lint_locale_file(path, lang?)` | Same findings as the CLI, as structured JSON. Accepts a file or a folder. |
 | `check_text(text, lang)` | Checks one string; returns findings plus the auto-fixed text. |
-| `plural_forms(word, lang, key?)` | Word forms mapped to the `Intl.PluralRules` categories, plus a ready i18next key set. Uses Grok (`XAI_API_KEY`, model override `XAI_MODEL`) and falls back to a built-in dictionary of 15 common UI words (položka, soubor, den, uživatel, zpráva, objednávka, produkt, kus, minuta, hodina, komentář, výsledek, stránka, kategorie, varianta, and their Polish equivalents). Output is always validated against `Intl.PluralRules`. |
 | `vocative(name)` | Czech vocative via [`vokativ`](https://www.npmjs.com/package/vokativ): `Petr` → `Petře`. |
 
-**This repo:** `.cursor/mcp.json` is already set up, both in `slavlint/` (when only that folder is open) and at the repo root (when the whole repo, including `demo/`, is open). Run `npm install` in `slavlint/`, then enable `slavlint` in Cursor Settings → MCP. The key is read from your environment (`${env:XAI_API_KEY}`); never put it in `mcp.json`.
+The agent flow (enforced by the rule in `.cursor/rules/slavlint.mdc`): `plural_forms` → the agent writes the forms → `verify_plural_forms` → paste the key set → `lint_locale_file`.
+
+The built-in dictionary covers 15 common UI words: položka, soubor, den, uživatel, zpráva, objednávka, produkt, kus, minuta, hodina, komentář, výsledek, stránka, kategorie, varianta, and their Polish equivalents.
+
+Grok is optional. Only if `XAI_API_KEY` happens to be in the server's environment does `plural_forms` add an unverified `suggestion` from Grok (model override: `XAI_MODEL`). Nothing depends on it, and slavlint never writes the key anywhere.
+
+**This repo:** `.cursor/mcp.json` is already set up, both in `slavlint/` (when only that folder is open) and at the repo root (when the whole repo, including `demo/`, is open). Run `npm install` in `slavlint/`, then enable `slavlint` in Cursor Settings → MCP.
 
 **Another project:** run
 
@@ -61,18 +68,27 @@ The same core is exposed as an MCP server over stdio (`dist/mcp.js`, bin `slavli
 npx slavlint install-cursor /path/to/project
 ```
 
-It adds a `slavlint` entry to the project's `.cursor/mcp.json`, keeping other servers, and copies the agent rule to `.cursor/rules/slavlint.mdc`. It works without `XAI_API_KEY`: `plural_forms` then uses the built-in dictionary. The key is only referenced as `${env:XAI_API_KEY}` and never written. The resulting entry looks like this:
+It adds a `slavlint` entry to the project's `.cursor/mcp.json`, keeping other servers, and copies the agent rule to `.cursor/rules/slavlint.mdc`. There's no `env` block. It writes absolute paths, because Cursor started from the Dock may not find an nvm-installed `node`:
 
 ```json
 {
   "mcpServers": {
     "slavlint": {
-      "command": "node",
-      "args": ["/absolute/path/to/slavlint/dist/mcp.js"],
-      "env": { "XAI_API_KEY": "${env:XAI_API_KEY}" }
+      "command": "/absolute/path/to/node",
+      "args": ["/absolute/path/to/slavlint/dist/mcp.js"]
     }
   }
 }
+```
+
+**Verify with cursor-agent:**
+
+```bash
+cd /path/to/project
+cursor-agent mcp list                 # "slavlint: not loaded (needs approval)"
+cursor-agent mcp enable slavlint      # approve it once
+cursor-agent mcp list-tools slavlint  # 5 tools
+cursor-agent                          # then type /mcp: slavlint with 5 tools
 ```
 
 The rule tells the agent to use these tools for Czech and Polish UI texts and to run `lint_locale_file` before finishing.

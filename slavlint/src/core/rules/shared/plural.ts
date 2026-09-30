@@ -1,4 +1,4 @@
-import { categoryExamples, integerCategories, pluralCategories, type PluralType } from "../../plurals.js";
+import { categoryExamples, decimalCopies, integerCategories, pluralCategories, type PluralType } from "../../plurals.js";
 import { LANG_NAMES, type Entry, type Finding, type Rule } from "../../types.js";
 
 const SUFFIX_RE = /^(.+?)(_ordinal)?_(zero|one|two|few|many|other)$/;
@@ -61,11 +61,9 @@ export const pluralRule: Rule = ({ lang, entries }) => {
       });
     }
 
-    const fivePlus = new Intl.PluralRules(lang, { type: group.type }).select(5);
-    const fiveEntry = group.variants.get(fivePlus);
-    for (const cat of required.filter((c) => !integers.has(c))) {
-      const entry = group.variants.get(cat);
-      if (!entry || !fiveEntry || entry.value.trim() !== fiveEntry.value.trim()) continue;
+    const values = Object.fromEntries([...group.variants].map(([cat, e]) => [cat, e.value]));
+    for (const { category: cat, sameAs: fivePlus } of decimalCopies(lang, values, group.type)) {
+      const entry = group.variants.get(cat)!;
       findings.push({
         rule: "plural-decimal-copy",
         severity: "warning",

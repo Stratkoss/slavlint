@@ -6,9 +6,21 @@ alwaysApply: false
 
 # Czech and Polish UI texts
 
-When you write or edit Czech or Polish UI texts, use the `slavlint` MCP tools instead of guessing:
+When you write or edit Czech or Polish UI texts, use the `slavlint` MCP tools instead of guessing.
 
-- **Counts**: Czech and Polish have four plural categories (`_one`, `_few`, `_many`, `_other`), not two like English. For any text with `{{count}}`, call `plural_forms(word, lang, key)` and paste its `i18next` key set. Never write only `_one` / `_other`.
+## Texts with `{{count}}`
+
+Czech and Polish have four plural categories (`_one`, `_few`, `_many`, `_other`), not two like English. Never write only `_one` / `_other`. Follow these steps in order:
+
+1. `plural_forms(word, lang)`: get the required categories, example counts and the grammatical form each one takes. If the word is in the dictionary, `knownForms` are correct.
+2. Write the forms yourself, following the hints. The decimal form (cs `many`, pl `other`) is **not** the same as the 5+ form: `1,5 položky` vs `5 položek`.
+3. `verify_plural_forms(lang, forms, key)`: fix every error, and look at every warning. Paste the returned `i18next` key set into the locale file.
+4. `lint_locale_file(path)` (see below).
+
+`verify_plural_forms` checks the structure and the known words, not full grammar, so still write the forms carefully.
+
+## Other texts
+
 - **Single strings**: call `check_text(text, lang)` and use its `fixed` value (non-breaking spaces after one-letter words, between numbers and units, Czech quotes „…“, Czech dates `30. 9. 2026`).
 - **Greetings with a name** (Czech): never write `"Dobrý den, {{firstName}}"`; the name must be in the vocative. Call `vocative(name)` to see the form and pass it from code as a separate placeholder, e.g. `{{firstNameVocative}}`.
 - **Never change** `{{placeholders}}`, `$t(...)` or `<1>…</1>` tags.

@@ -21,6 +21,37 @@ export function integerCategories(lang: Lang, type: PluralType = "cardinal"): Se
 }
 
 /**
+ * Decimal-only categories whose text equals the 5+ category's text
+ * (cs _many = _other, pl _other = _many): usually a copy-paste.
+ */
+export function decimalCopies(
+  lang: Lang,
+  values: Record<string, string | undefined>,
+  type: PluralType = "cardinal",
+): Array<{ category: string; sameAs: string }> {
+  const integers = integerCategories(lang, type);
+  const fivePlus = new Intl.PluralRules(lang, { type }).select(5);
+  const five = values[fivePlus]?.trim();
+  if (!five) return [];
+  return pluralCategories(lang, type)
+    .filter((cat) => !integers.has(cat) && values[cat]?.trim() === five)
+    .map((category) => ({ category, sameAs: fivePlus }));
+}
+
+/** Up to three representative counts per category, e.g. cs other -> [0, 5, 10], cs many -> [1.5]. */
+export function categorySamples(lang: Lang): Record<string, number[]> {
+  const rules = new Intl.PluralRules(lang);
+  const ints = [0, 1, 2, 3, 4, 5, 10, 11, 12, 21, 22, 25, 100, 101, 102];
+  const decimals = [1.5, 2.5, 0.5];
+  const out: Record<string, number[]> = {};
+  for (const cat of pluralCategories(lang)) {
+    const hits = ints.filter((n) => rules.select(n) === cat).slice(0, 3);
+    out[cat] = hits.length ? hits : decimals.filter((n) => rules.select(n) === cat).slice(0, 1);
+  }
+  return out;
+}
+
+/**
  * Human-readable sample counts for each plural category, computed from
  * Intl.PluralRules, e.g. Czech "few" -> "2, 3, 4", Czech "many" -> "decimals like 1.5".
  */
