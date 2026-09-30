@@ -1,0 +1,24 @@
+{
+  "title": "Moje konto",
+  "cartCount_one": "W koszyku jest {{count}} produkt",
+  "cartCount_other": "W koszyku jest {{count}} produktów",
+  "messages_one": "Masz {{count}} wiadomość",
+  "messages_few": "Masz {{count}} wiadomości",
+  "messages_many": "Masz {{count}} wiadomości",
+  "results": "Znaleziono {{count}} wyników",
+  "pieces": "{{count}} szt.",
+  "promo": "Rabat 1500 zł przy zamówieniu powyżej 10000 zł",
+  "shipping": "Dostawa w piątek z kurierem",
+  "volume": "Pojemność 250 ml",
+  "search": "Szukaj w {{category}}",
+  "user": {
+    "followers_one": "{{count}} obserwujący",
+    "followers_few": "{{count}} obserwujących",
+    "followers_many": "{{count}} obserwujących",
+    "followers_other": "{{count}} obserwującego",
+    "comments": {
+      "count_one": "{{count}} komentarz",
+      "count_few": "{{count}} komentarze"
+    }
+  }
+}

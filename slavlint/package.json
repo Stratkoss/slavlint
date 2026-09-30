@@ -1,0 +1,38 @@
+{
+  "name": "slavlint",
+  "version": "0.1.0",
+  "description": "Lints Czech and Polish i18n locale files for plural, grammar and typography mistakes that AI agents typically make.",
+  "type": "module",
+  "bin": {
+    "slavlint": "dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepare": "tsc",
+    "test": "tsc && node --test dist/test/*.test.js",
+    "lint:demo": "node dist/cli.js ../demo/locales",
+    "lint:fixtures": "node dist/cli.js fixtures"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "i18n",
+    "i18next",
+    "czech",
+    "polish",
+    "lint",
+    "mcp"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "picocolors": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.0",
+    "typescript": "^5.9.3"
+  }
+}

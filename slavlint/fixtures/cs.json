@@ -1,0 +1,32 @@
+{
+  "title": "Můj účet",
+  "cartCount_one": "V košíku je {{count}} položka",
+  "cartCount_other": "V košíku je {{count}} položek",
+  "files_one": "Nahrán {{count}} soubor",
+  "files_few": "Nahrány {{count}} soubory",
+  "files_other": "Nahráno {{count}} souborů",
+  "hours_one": "{{count}} hodina",
+  "hours_two": "{{count}} hodiny",
+  "hours_few": "{{count}} hodiny",
+  "hours_many": "{{count}} hodiny",
+  "hours_other": "{{count}} hodin",
+  "reviews": "{{count}} recenzí",
+  "pieces": "{{count}} ks",
+  "promo": "Sleva až 1500 Kč na objednávky nad 10000 Kč",
+  "shipping": "Doručení v pátek 30.9.2026 s kurýrem",
+  "volume": "Objem 250 ml",
+  "save": "Klikněte na \"Uložit\" a pokračujte",
+  "quoteName": "Produkt “{{name}}” byl přidán",
+  "founded": "Založeno v roce 1998",
+  "search": "Hledat v {{category}}",
+  "notifications": {
+    "unread_one": "Máte {{count}} nepřečtenou zprávu",
+    "unread_few": "Máte {{count}} nepřečtené zprávy",
+    "unread_many": "Máte {{count}} nepřečtené zprávy",
+    "unread_other": "Máte {{count}} nepřečtených zpráv",
+    "orders": {
+      "pending_one": "Čeká {{count}} objednávka",
+      "pending_other": "Čeká {{count}} objednávek"
+    }
+  }
+}
