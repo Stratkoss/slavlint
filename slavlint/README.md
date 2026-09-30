@@ -55,7 +55,13 @@ The same core is exposed as an MCP server over stdio (`dist/mcp.js`, bin `slavli
 
 **This repo:** `.cursor/mcp.json` is already set up, both in `slavlint/` (when only that folder is open) and at the repo root (when the whole repo, including `demo/`, is open). Run `npm install` in `slavlint/`, then enable `slavlint` in Cursor Settings → MCP. The key is read from your environment (`${env:XAI_API_KEY}`); never put it in `mcp.json`.
 
-**Another project:** add this to its `.cursor/mcp.json` (use the absolute path to this folder):
+**Another project:** run
+
+```bash
+npx slavlint install-cursor /path/to/project
+```
+
+It adds a `slavlint` entry to the project's `.cursor/mcp.json`, keeping other servers, and copies the agent rule to `.cursor/rules/slavlint.mdc`. It works without `XAI_API_KEY`: `plural_forms` then uses the built-in dictionary. The key is only referenced as `${env:XAI_API_KEY}` and never written. The resulting entry looks like this:
 
 ```json
 {
@@ -69,9 +75,20 @@ The same core is exposed as an MCP server over stdio (`dist/mcp.js`, bin `slavli
 }
 ```
 
-Also copy `.cursor/rules/slavlint.mdc`. It tells the agent to use these tools for Czech and Polish UI texts and to run `lint_locale_file` before finishing.
+The rule tells the agent to use these tools for Czech and Polish UI texts and to run `lint_locale_file` before finishing.
 
 To try the server without Cursor: `npx @modelcontextprotocol/inspector node dist/mcp.js`.
+
+## See the bug in i18next
+
+`scripts/render-demo.mjs` renders one plural key through real i18next for counts 1, 2, 3, 5 and 1.5, side by side for two locale files. Lines that fall back to English (`en.json` next to each file) are marked `← English`.
+
+```bash
+T=packages/admin/dashboard/src/i18n/translations
+node scripts/render-demo.mjs products.variantCount \
+  "v2.19.0=$HOME/Projects/medusa-i18n/$T/cs.json" \
+  "upstream=/path/to/medusa/$T/cs.json"
+```
 
 ## Tests
 

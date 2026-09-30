@@ -8,7 +8,8 @@
     "slavlint-mcp": "dist/mcp.js"
   },
   "files": [
-    "dist"
+    "dist",
+    ".cursor/rules"
   ],
   "scripts": {
     "build": "tsc && chmod +x dist/cli.js dist/mcp.js",
@@ -38,6 +39,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.19.0",
+    "i18next": "^26.4.2",
     "typescript": "^5.9.3"
   }
 }

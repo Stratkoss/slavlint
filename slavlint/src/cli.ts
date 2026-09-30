@@ -4,12 +4,17 @@ import path from "node:path";
 import { parseArgs } from "node:util";
 import pc from "picocolors";
 import { LANGS, findLocaleFiles, fixFile, lintPath, type Lang } from "./core/index.js";
+import { installCursor } from "./install.js";
 import { countFindings, formatReport } from "./report.js";
 
 const USAGE = `Usage: slavlint <path> [options]
+       slavlint install-cursor [projectDir]
 
 Lints Czech (cs) and Polish (pl) i18next locale files.
 <path> can be a single JSON file or a folder (scanned recursively).
+
+install-cursor registers the slavlint MCP server and agent rule in
+<projectDir>/.cursor (default: current folder). Works without XAI_API_KEY.
 
 Options:
   --fix          Rewrite typography issues in place (plural issues are only reported)
@@ -39,6 +44,8 @@ function main(): number {
     console.log(USAGE);
     return values.help ? 0 : 2;
   }
+
+  if (positionals[0] === "install-cursor") return runInstall(positionals[1] ?? ".");
 
   const lang = values.lang as Lang | undefined;
   if (lang && !LANGS.includes(lang)) {
@@ -79,6 +86,28 @@ function main(): number {
     console.log(formatReport(results));
   }
   return countFindings(results).errors > 0 ? 1 : 0;
+}
+
+function runInstall(projectDir: string): number {
+  if (!fs.existsSync(projectDir) || !fs.statSync(projectDir).isDirectory()) {
+    console.error(pc.red(`Not a directory: ${projectDir}`));
+    return 2;
+  }
+  try {
+    const { actions } = installCursor(projectDir);
+    for (const action of actions) console.log(`${pc.green("✔")} ${action}`);
+  } catch (err) {
+    console.error(pc.red((err as Error).message));
+    return 1;
+  }
+  console.log(
+    process.env.XAI_API_KEY
+      ? pc.dim("XAI_API_KEY is set: plural_forms will ask Grok.")
+      : pc.yellow("XAI_API_KEY is not set: everything works; plural_forms uses the built-in dictionary of 15 common UI words.") +
+          pc.dim("\nTo enable Grok, export XAI_API_KEY before starting Cursor. The key is never written to mcp.json."),
+  );
+  console.log(pc.dim("Next: open the project in Cursor and enable \"slavlint\" in Settings → MCP."));
+  return 0;
 }
 
 process.exitCode = main();
