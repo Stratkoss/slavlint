@@ -62,11 +62,11 @@ test("decimal slot copied from the 5+ form is a warning", () => {
   assert.deepEqual(rules("pl", { one: "wariant", few: "warianty", many: "wariantów", other: "wariantu" }), []);
 });
 
-test("demo locales: no plural errors, only the Czech vocative greeting", () => {
+test("demo locales are clean", () => {
   const results = lintPath(path.join(root, "../demo/locales"));
   assert.equal(results.length, 2);
-  const errors = results.flatMap((r) => r.findings.filter((f) => f.severity === "error").map((f) => `${r.lang}:${f.rule}:${f.key}`));
-  assert.deepEqual(errors, ["cs:vocative-greeting:greeting"]);
+  const findings = results.flatMap((r) => r.findings.map((f) => `${r.lang}:${f.severity}:${f.rule}:${f.key}`));
+  assert.deepEqual(findings, []);
 });
 
 test("fixtures report the intentionally broken keys", () => {

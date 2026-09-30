@@ -89,6 +89,59 @@ h1 {
 
 .greeting {
   color: var(--muted);
+  line-height: 1.75rem;
+}
+
+.greet {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.35rem 0.75rem;
+}
+
+.name-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+}
+
+.name-field input {
+  width: 7.25rem;
+  height: 1.75rem;
+  padding: 0 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.875rem;
+}
+
+.name-picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.name-picks button {
+  padding: 0.05rem 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.name-picks button:hover {
+  color: var(--ink);
+}
+
+.name-picks button[aria-pressed="true"] {
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 600;
 }
 
 .tools {

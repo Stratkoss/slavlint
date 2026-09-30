@@ -11,9 +11,11 @@ import {
   type ProductId,
 } from "@/lib/catalog";
 import { currencyFormat, dateFormat } from "@/lib/i18n";
+import { vocativeFirstName } from "@/lib/vocative";
 import { ProductArt } from "./ProductArt";
 
 const languages = ["cs", "pl"] as const;
+const nameSuggestions = ["Petr", "Jana", "Tomáš"] as const;
 
 type Cart = Partial<Record<ProductId, number>>;
 
@@ -21,6 +23,7 @@ export function Shop() {
   const { t, i18n } = useTranslation("translation", { useSuspense: false });
   const [cart, setCart] = useState<Cart>({});
   const [saleDays, setSaleDays] = useState(initialSaleDays);
+  const [firstName, setFirstName] = useState(shopper.firstName);
   const language = i18n.resolvedLanguage ?? "cs";
 
   useEffect(() => {
@@ -62,9 +65,35 @@ export function Shop() {
       <header className="header">
         <div className="identity">
           <h1>{t("shopName")}</h1>
-          <p className="greeting">
-            {t("greeting", { firstName: shopper.firstName })}
-          </p>
+          <div className="greet">
+            <p className="greeting">
+              {t("greeting", {
+                firstName,
+                firstNameVocative: vocativeFirstName(firstName),
+              })}
+            </p>
+            <div className="name-field">
+              <input
+                value={firstName}
+                onChange={(event) => setFirstName(event.target.value)}
+                aria-label={language === "pl" ? "Imię" : "Jméno"}
+                autoComplete="given-name"
+                spellCheck={false}
+              />
+              <div className="name-picks">
+                {nameSuggestions.map((name) => (
+                  <button
+                    key={name}
+                    type="button"
+                    aria-pressed={firstName === name}
+                    onClick={() => setFirstName(name)}
+                  >
+                    {name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
         <div className="tools">
           <nav className="languages" aria-label={t("language")}>

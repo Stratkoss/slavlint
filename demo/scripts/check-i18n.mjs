@@ -38,12 +38,12 @@ const dated = {
 };
 
 await i18next.changeLanguage("cs");
-expect(i18next.t("greeting", { firstName: "Anna" }), "Dobrý den, Anna");
-expect(i18next.t("cartCount", { count: 0 }), "V košíku je 0 položek");
-expect(i18next.t("cartCount", { count: 1 }), "V košíku je 1 položka");
-expect(i18next.t("cartCount", { count: 2 }), "V košíku jsou 2 položky");
-expect(i18next.t("cartCount", { count: 4 }), "V košíku jsou 4 položky");
-expect(i18next.t("cartCount", { count: 5 }), "V košíku je 5 položek");
+expect(i18next.t("greeting", { firstNameVocative: "Anno" }), "Dobrý den, Anno");
+expect(i18next.t("cartCount", { count: 0 }), "V\u00a0košíku je 0 položek");
+expect(i18next.t("cartCount", { count: 1 }), "V\u00a0košíku je 1 položka");
+expect(i18next.t("cartCount", { count: 2 }), "V\u00a0košíku jsou 2 položky");
+expect(i18next.t("cartCount", { count: 4 }), "V\u00a0košíku jsou 4 položky");
+expect(i18next.t("cartCount", { count: 5 }), "V\u00a0košíku je 5 položek");
 expect(i18next.t("saleDays", { count: 1 }), "Sleva končí za 1 den.");
 expect(i18next.t("saleDays", { count: 3 }), "Sleva končí za 3 dny.");
 expect(i18next.t("saleDays", { count: 5 }), "Sleva končí za 5 dní.");
@@ -59,12 +59,12 @@ expect(i18next.t("products.cup.name"), "Hrnek");
 
 await i18next.changeLanguage("pl");
 expect(i18next.t("greeting", { firstName: "Anna" }), "Dzień dobry, Anna");
-expect(i18next.t("cartCount", { count: 0 }), "W koszyku jest 0 produktów");
-expect(i18next.t("cartCount", { count: 1 }), "W koszyku jest 1 produkt");
-expect(i18next.t("cartCount", { count: 3 }), "W koszyku są 3 produkty");
-expect(i18next.t("cartCount", { count: 5 }), "W koszyku jest 5 produktów");
-expect(i18next.t("cartCount", { count: 12 }), "W koszyku jest 12 produktów");
-expect(i18next.t("cartCount", { count: 22 }), "W koszyku są 22 produkty");
+expect(i18next.t("cartCount", { count: 0 }), "W\u00a0koszyku jest 0 produktów");
+expect(i18next.t("cartCount", { count: 1 }), "W\u00a0koszyku jest 1 produkt");
+expect(i18next.t("cartCount", { count: 3 }), "W\u00a0koszyku są 3 produkty");
+expect(i18next.t("cartCount", { count: 5 }), "W\u00a0koszyku jest 5 produktów");
+expect(i18next.t("cartCount", { count: 12 }), "W\u00a0koszyku jest 12 produktów");
+expect(i18next.t("cartCount", { count: 22 }), "W\u00a0koszyku są 22 produkty");
 expect(i18next.t("saleDays", { count: 1 }), "Wyprzedaż kończy się za 1 dzień.");
 expect(i18next.t("saleDays", { count: 3 }), "Wyprzedaż kończy się za 3 dni.");
 expect(i18next.t("saleDays", { count: 5 }), "Wyprzedaż kończy się za 5 dni.");

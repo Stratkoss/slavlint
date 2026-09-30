@@ -1,10 +1,10 @@
 {
   "shopName": "online-shop",
   "greeting": "Dzień dobry, {{firstName}}",
-  "cartCount_one": "W koszyku jest {{count}} produkt",
-  "cartCount_few": "W koszyku są {{count}} produkty",
-  "cartCount_many": "W koszyku jest {{count}} produktów",
-  "cartCount_other": "W koszyku jest {{count}} produktu",
+  "cartCount_one": "W\u00a0koszyku jest {{count}} produkt",
+  "cartCount_few": "W\u00a0koszyku są {{count}} produkty",
+  "cartCount_many": "W\u00a0koszyku jest {{count}} produktów",
+  "cartCount_other": "W\u00a0koszyku jest {{count}} produktu",
   "saleDays_one": "Wyprzedaż kończy się za {{count}} dzień.",
   "saleDays_few": "Wyprzedaż kończy się za {{count}} dni.",
   "saleDays_many": "Wyprzedaż kończy się za {{count}} dni.",
@@ -22,14 +22,17 @@
   "addNamed": "Dodaj {{name}} do koszyka",
   "remove": "Usuń",
   "removeNamed": "Usuń {{name}}",
-  "pieces": "{{count}} szt.",
+  "pieces_one": "{{count}}\u00a0sztuka",
+  "pieces_few": "{{count}}\u00a0sztuki",
+  "pieces_many": "{{count}}\u00a0sztuk",
+  "pieces_other": "{{count}}\u00a0sztuki",
   "price": "{{price, currency}}",
   "total": "Razem {{total, currency}}",
   "delivery": "Dostarczymy {{date, datetime}}.",
   "products": {
     "cup": {
       "name": "Kubek",
-      "detail": "Kubek kamionkowy, 250 ml"
+      "detail": "Kubek kamionkowy, 250\u00a0ml"
     },
     "cloth": {
       "name": "Ścierka",
@@ -37,11 +40,11 @@
     },
     "candle": {
       "name": "Świeca",
-      "detail": "Świeca z wosku pszczelego"
+      "detail": "Świeca z\u00a0wosku pszczelego"
     },
     "notebook": {
       "name": "Notes",
-      "detail": "Notes w linie"
+      "detail": "Notes w\u00a0linie"
     }
   }
 }
