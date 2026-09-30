@@ -36,7 +36,13 @@ async function renderer(file) {
     initAsync: false,
     interpolation: { escapeValue: false },
   });
-  return { lng, render: (count) => t(key, { count, returnDetails: true }) };
+  const number = new Intl.NumberFormat(lng);
+  // `count` selects the plural form; `replace` controls how it is displayed (1,5).
+  return {
+    lng,
+    format: (count) => number.format(count),
+    render: (count) => t(key, { count, replace: { count: number.format(count) }, returnDetails: true }),
+  };
 }
 
 const cols = await Promise.all(
@@ -51,7 +57,7 @@ const plural = new Intl.PluralRules(lng);
 const ENGLISH = "← English";
 
 const rows = counts.map((count) => ({
-  count: String(count),
+  count: cols[0].format(count),
   category: plural.select(count),
   cells: cols.map((col) => {
     const { res, usedLng } = col.render(count);

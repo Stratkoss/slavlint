@@ -83,11 +83,19 @@ To try the server without Cursor: `npx @modelcontextprotocol/inspector node dist
 
 `scripts/render-demo.mjs` renders one plural key through real i18next for counts 1, 2, 3, 5 and 1.5, side by side for two locale files. Lines that fall back to English (`en.json` next to each file) are marked `← English`.
 
+Counts are formatted for the file's language via `Intl.NumberFormat` (`1,5`).
+
+Example: Medusa admin `v2.19.0` (bug from [medusajs/medusa#16518](https://github.com/medusajs/medusa/issues/16518)) vs current upstream. Both are sparse checkouts of `packages/admin/dashboard/src/i18n`:
+
 ```bash
+git clone --depth 1 --branch v2.19.0 --filter=blob:none --sparse https://github.com/medusajs/medusa.git ~/Projects/medusa-i18n
+git clone --depth 1 --filter=blob:none --sparse https://github.com/medusajs/medusa.git ~/Projects/medusa-upstream
+for d in ~/Projects/medusa-i18n ~/Projects/medusa-upstream; do git -C $d sparse-checkout set packages/admin/dashboard/src/i18n; done
+
 T=packages/admin/dashboard/src/i18n/translations
 node scripts/render-demo.mjs products.variantCount \
   "v2.19.0=$HOME/Projects/medusa-i18n/$T/cs.json" \
-  "upstream=/path/to/medusa/$T/cs.json"
+  "upstream=$HOME/Projects/medusa-upstream/$T/cs.json"
 ```
 
 ## Tests
