@@ -1,0 +1,18 @@
+---
+description: Use slavlint MCP tools when writing or editing Czech (cs) or Polish (pl) UI texts and i18n locale files
+globs: "**/{cs,pl,cs-CZ,pl-PL}.json,**/locales/{cs,pl}/**/*.json,**/translations/{cs,pl}.json"
+alwaysApply: false
+---
+
+# Czech and Polish UI texts
+
+When you write or edit Czech or Polish UI texts, use the `slavlint` MCP tools instead of guessing:
+
+- **Counts**: Czech and Polish have four plural categories (`_one`, `_few`, `_many`, `_other`), not two like English. For any text with `{{count}}`, call `plural_forms(word, lang, key)` and paste its `i18next` key set. Never write only `_one` / `_other`.
+- **Single strings**: call `check_text(text, lang)` and use its `fixed` value (non-breaking spaces after one-letter words, between numbers and units, Czech quotes „…“, Czech dates `30. 9. 2026`).
+- **Greetings with a name** (Czech): never write `"Dobrý den, {{firstName}}"`; the name must be in the vocative. Call `vocative(name)` to see the form and pass it from code as a separate placeholder, e.g. `{{firstNameVocative}}`.
+- **Never change** `{{placeholders}}`, `$t(...)` or `<1>…</1>` tags.
+
+## Before finishing
+
+Run `lint_locale_file(path)` on every cs/pl locale file you touched (absolute path). Fix all errors. Fix typography warnings with `npx slavlint <path> --fix` or by applying the suggestions. Don't finish while errors remain.

@@ -51,6 +51,17 @@ test("{{count}} without plural variants is only a warning", () => {
   );
 });
 
+test("decimal slot copied from the 5+ form is a warning", () => {
+  const rules = (lang: "cs" | "pl", forms: Record<string, string>) =>
+    lintEntries(Object.entries(forms).map(([cat, value]) => ({ key: `v_${cat}`, value })), lang)
+      .filter((f) => f.rule === "plural-decimal-copy")
+      .map((f) => `${f.key}:${f.severity}`);
+  assert.deepEqual(rules("cs", { one: "1 varianta", few: "varianty", many: "variant", other: "variant" }), ["v_many:warning"]);
+  assert.deepEqual(rules("cs", { one: "1 varianta", few: "varianty", many: "varianty", other: "variant" }), []);
+  assert.deepEqual(rules("pl", { one: "wariant", few: "warianty", many: "wariantów", other: "wariantów" }), ["v_other:warning"]);
+  assert.deepEqual(rules("pl", { one: "wariant", few: "warianty", many: "wariantów", other: "wariantu" }), []);
+});
+
 test("demo locales have no plural errors", () => {
   const results = lintPath(path.join(root, "../demo/locales"));
   assert.equal(results.length, 2);

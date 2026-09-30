@@ -61,6 +61,21 @@ export const pluralRule: Rule = ({ lang, entries }) => {
       });
     }
 
+    const fivePlus = new Intl.PluralRules(lang, { type: group.type }).select(5);
+    const fiveEntry = group.variants.get(fivePlus);
+    for (const cat of required.filter((c) => !integers.has(c))) {
+      const entry = group.variants.get(cat);
+      if (!entry || !fiveEntry || entry.value.trim() !== fiveEntry.value.trim()) continue;
+      findings.push({
+        rule: "plural-decimal-copy",
+        severity: "warning",
+        key: entry.key,
+        line: entry.line,
+        message: `${suffix(cat)} is identical to ${suffix(fivePlus)} ("${entry.value}")`,
+        explanation: `${langName} uses ${suffix(cat)} only for decimals like 1.5, which normally take a different form (genitive singular) than ${suffix(fivePlus)} for 5+ (genitive plural). Identical texts usually mean the 5+ form was copied into the decimal slot. Ignore if the two forms genuinely coincide for this word.`,
+      });
+    }
+
     if (missing.length > 0) {
       const forms = missing.map((cat) => `${suffix(cat)} (${examples[cat]})`).join(", ");
       const counts = missing.map((cat) => examples[cat]).join(" or ");
