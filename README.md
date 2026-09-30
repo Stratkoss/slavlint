@@ -16,19 +16,16 @@ slavlint found 9 wrong Czech plural forms in the current [Medusa](https://github
 
 ## Quick start
 
-Requires Node.js 20+.
+Requires Node.js 20+. slavlint is not published to npm; run it from a clone. No API key.
 
 ```bash
-npx slavlint ./locales
-npx slavlint ./locales --fix    # typography only; plurals are reported, never rewritten
-npx slavlint ./locales --json
+git clone https://github.com/Stratkoss/slavlint
+cd slavlint/slavlint && npm install
+npx slavlint ./path/to/locales
+npx slavlint install-cursor /path/to/your/project
 ```
 
-In Cursor, no API key:
-
-```bash
-npx slavlint install-cursor <project path>
-```
+`--fix` rewrites typography only. `--json` prints the findings. Plurals are reported, never rewritten.
 
 ## MCP tools
 
