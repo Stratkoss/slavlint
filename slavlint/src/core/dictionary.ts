@@ -74,3 +74,16 @@ export function lookupForms(word: string, lang: Lang): Record<string, string> | 
   const entry = DICTIONARY.find((e) => e.cs.one === w || e.pl.one === w);
   return entry ? entry[lang] : null;
 }
+
+/**
+ * True when `surface` is a dictionary form that Intl would use for both
+ * categories, e.g. Polish "dni" for few and many. Unknown words return false.
+ */
+export function sameFormInDictionary(lang: Lang, catA: string, catB: string, surface: string): boolean {
+  const word = surface.trim().toLowerCase();
+  if (!word) return false;
+  return DICTIONARY.some((entry) => {
+    const forms = entry[lang];
+    return forms[catA] === word && forms[catA] === forms[catB];
+  });
+}

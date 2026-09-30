@@ -62,6 +62,58 @@ test("decimal slot copied from the 5+ form is a warning", () => {
   assert.deepEqual(rules("pl", { one: "wariant", few: "warianty", many: "wariantów", other: "wariantu" }), []);
 });
 
+test("5+ form copied from the 2–4 form is a warning", () => {
+  const hits = (lang: "cs" | "pl", forms: Record<string, string>) =>
+    lintEntries(Object.entries(forms).map(([cat, value]) => ({ key: `v_${cat}`, value })), lang)
+      .filter((f) => f.rule === "plural-few-copy");
+  const copied = hits("cs", {
+    one: "{{count}} možnost dopravy",
+    few: "{{count}} možnosti dopravy",
+    many: "{{count}} možností dopravy",
+    other: "{{count}} možnosti dopravy",
+  });
+  assert.deepEqual(copied.map((f) => `${f.key}:${f.severity}`), ["v_other:warning"]);
+  assert.equal(
+    copied[0].explanation,
+    "The 5+ form looks copied from the 2–4 form: users see e.g. '5 možnosti dopravy' instead of '5 možností dopravy'.",
+  );
+  assert.deepEqual(
+    hits("cs", {
+      one: "{{count}} možnost dopravy",
+      few: "{{count}} možnosti dopravy",
+      many: "{{count}} možností dopravy",
+      other: "{{count}} možností dopravy",
+    }).map((f) => f.key),
+    [],
+  );
+  // No inflected noun after the number still warns; identical forms are not an error.
+  const plain = hits("cs", {
+    one: "Odebrat uživatele",
+    few: "Odebrat uživatele",
+    many: "Odebrat uživatele",
+    other: "Odebrat uživatele",
+  });
+  assert.deepEqual(plain.map((f) => `${f.key}:${f.severity}`), ["v_other:warning"]);
+  assert.deepEqual(
+    hits("pl", { one: "wariant", few: "warianty", many: "warianty", other: "wariantu" }).map((f) => `${f.key}:${f.severity}`),
+    ["v_many:warning"],
+  );
+  assert.deepEqual(
+    hits("pl", { one: "wariant", few: "warianty", many: "wariantów", other: "wariantu" }).map((f) => f.key),
+    [],
+  );
+  // Dictionary forms that really coincide (Polish 2 dni / 5 dni) are not a copy.
+  assert.deepEqual(
+    hits("pl", {
+      one: "Wyprzedaż kończy się za {{count}} dzień.",
+      few: "Wyprzedaż kończy się za {{count}} dni.",
+      many: "Wyprzedaż kończy się za {{count}} dni.",
+      other: "Wyprzedaż kończy się za {{count}} dnia.",
+    }).map((f) => f.key),
+    [],
+  );
+});
+
 test("demo locales are clean", () => {
   const results = lintPath(path.join(root, "../demo/locales"));
   assert.equal(results.length, 2);

@@ -1,5 +1,5 @@
-import { lookupForms } from "./dictionary.js";
-import { categorySamples, decimalCopies, integerCategories, pluralCategories } from "./plurals.js";
+import { lookupForms, sameFormInDictionary } from "./dictionary.js";
+import { categorySamples, decimalCopies, fewCopies, integerCategories, pluralCategories } from "./plurals.js";
 import { LANG_NAMES, type Finding, type Lang } from "./types.js";
 
 /** Which grammatical form each Intl.PluralRules category takes after a number. */
@@ -93,7 +93,7 @@ export function defaultKey(word: string): string {
 
 /**
  * Verifies agent-written plural forms. Errors: missing/empty/unknown categories.
- * Warnings: decimal slot copied from the 5+ form, mismatches with the dictionary.
+ * Warnings: 5+ form copied from the 2–4 form, decimal slot copied from the 5+ form, mismatches with the dictionary.
  */
 export function verifyPluralForms(lang: Lang, input: Record<string, unknown>, key?: string, word?: string): VerifyResult {
   const langName = LANG_NAMES[lang];
@@ -119,6 +119,12 @@ export function verifyPluralForms(lang: Lang, input: Record<string, unknown>, ke
     if (!required.includes(cat)) {
       errors.push(finding("error", "plural-unused", cat, `"${cat}" is not a ${langName} plural category`, `${langName} uses only ${required.join(", ")} (Intl.PluralRules); i18next would never select "${cat}".`));
     }
+  }
+
+  for (const { category, sameAs } of fewCopies(lang, forms)) {
+    const noun = forms[category].match(/\{\{\s*count\s*(?:,[^}]*)?\}\}\s*([\p{L}]+)/u)?.[1] ?? forms[category];
+    if (sameFormInDictionary(lang, category, sameAs, noun)) continue;
+    warnings.push(finding("warning", "plural-few-copy", category, `"${category}" is identical to "${sameAs}" ("${forms[category]}")`, "The 5+ form looks copied from the 2–4 form: users see e.g. '5 možnosti dopravy' instead of '5 možností dopravy'."));
   }
 
   for (const { category, sameAs } of decimalCopies(lang, forms)) {

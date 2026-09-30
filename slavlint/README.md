@@ -29,6 +29,7 @@ The exit code is `1` if there are errors, `0` if there are only warnings or noth
 | --- | --- | --- |
 | `plural-missing` | error | A plural key lacks a category that `Intl.PluralRules` requires (cs/pl: `_one`, `_few`, `_many`, `_other`). |
 | `plural-missing-decimal` | warning | A missing category that no integer 0–1000 reaches, i.e. used only for decimals like 1.5 (cs `_many`, pl `_other`). Harmless for whole-number counts. |
+| `plural-few-copy` | warning | The form for 5 equals the form for 2 (cs `_other` = `_few`, pl `_many` = `_few`): `5 možnosti` vs `5 možností`. A warning, because some words really don't change. Strings with no inflected noun after the number are still reported. |
 | `plural-decimal-copy` | warning | The decimal-only form equals the 5+ form (cs `_many` = `_other`, pl `_other` = `_many`), usually a copy-paste: `1,5 varianty` vs `5 variant`. Can be a false positive when the forms really coincide (pl `wiadomości`). |
 | `plural-unused` | warning | A plural suffix the language never uses (e.g. `_two` in Czech). |
 | `plural-no-variants` | warning | Text uses `{{count}}` but has no plural variants. Fine for abbreviations like `{{count}} ks`. |

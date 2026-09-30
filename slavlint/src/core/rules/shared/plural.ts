@@ -1,8 +1,15 @@
-import { categoryExamples, decimalCopies, integerCategories, pluralCategories, type PluralType } from "../../plurals.js";
+import { sameFormInDictionary } from "../../dictionary.js";
+import { categoryExamples, decimalCopies, fewCopies, integerCategories, pluralCategories, type PluralType } from "../../plurals.js";
 import { LANG_NAMES, type Entry, type Finding, type Rule } from "../../types.js";
 
 const SUFFIX_RE = /^(.+?)(_ordinal)?_(zero|one|two|few|many|other)$/;
 const COUNT_RE = /\{\{\s*count\s*(?:,[^}]*)?\}\}/;
+const WORD_AFTER_COUNT = /\{\{\s*count\s*(?:,[^}]*)?\}\}\s*([\p{L}]+)/u;
+
+/** Noun written after {{count}}, if any. Absence is not a reason to drop the warning. */
+function nounAfterCount(value: string): string | null {
+  return value.match(WORD_AFTER_COUNT)?.[1] ?? null;
+}
 
 interface PluralGroup {
   base: string;
@@ -62,6 +69,20 @@ export const pluralRule: Rule = ({ lang, entries }) => {
     }
 
     const values = Object.fromEntries([...group.variants].map(([cat, e]) => [cat, e.value]));
+    for (const { category: cat, sameAs: twoToFour } of fewCopies(lang, values, group.type)) {
+      const entry = group.variants.get(cat)!;
+      const noun = nounAfterCount(entry.value);
+      if (noun && sameFormInDictionary(lang, cat, twoToFour, noun)) continue;
+      findings.push({
+        rule: "plural-few-copy",
+        severity: "warning",
+        key: entry.key,
+        line: entry.line,
+        message: `${suffix(cat)} is identical to ${suffix(twoToFour)} ("${entry.value}")`,
+        explanation: "The 5+ form looks copied from the 2–4 form: users see e.g. '5 možnosti dopravy' instead of '5 možností dopravy'.",
+      });
+    }
+
     for (const { category: cat, sameAs: fivePlus } of decimalCopies(lang, values, group.type)) {
       const entry = group.variants.get(cat)!;
       findings.push({

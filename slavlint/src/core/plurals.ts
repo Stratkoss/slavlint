@@ -21,6 +21,26 @@ export function integerCategories(lang: Lang, type: PluralType = "cardinal"): Se
 }
 
 /**
+ * The category Intl.PluralRules picks for 5, when its text equals the
+ * category picked for 2 (cs _other = _few, pl _many = _few): usually a copy-paste.
+ * No finding when 5 and 2 share a category, or either string is missing.
+ */
+export function fewCopies(
+  lang: Lang,
+  values: Record<string, string | undefined>,
+  type: PluralType = "cardinal",
+): Array<{ category: string; sameAs: string }> {
+  const rules = new Intl.PluralRules(lang, { type });
+  const fivePlus = rules.select(5);
+  const twoToFour = rules.select(2);
+  if (fivePlus === twoToFour) return [];
+  const five = values[fivePlus]?.trim();
+  const two = values[twoToFour]?.trim();
+  if (!five || !two || five !== two) return [];
+  return [{ category: fivePlus, sameAs: twoToFour }];
+}
+
+/**
  * Decimal-only categories whose text equals the 5+ category's text
  * (cs _many = _other, pl _other = _many): usually a copy-paste.
  */
