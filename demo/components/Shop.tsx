@@ -1,15 +1,17 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { useTranslation } from "react-i18next";
 import {
   deliveryDate,
+  initialSaleDays,
   products,
-  saleDaysLeft,
+  saleEndDate,
   shopper,
   type ProductId,
 } from "@/lib/catalog";
 import { currencyFormat, dateFormat } from "@/lib/i18n";
+import { ProductArt } from "./ProductArt";
 
 const languages = ["cs", "pl"] as const;
 
@@ -18,6 +20,7 @@ type Cart = Partial<Record<ProductId, number>>;
 export function Shop() {
   const { t, i18n } = useTranslation("translation", { useSuspense: false });
   const [cart, setCart] = useState<Cart>({});
+  const [saleDays, setSaleDays] = useState(initialSaleDays);
   const language = i18n.resolvedLanguage ?? "cs";
 
   useEffect(() => {
@@ -26,6 +29,7 @@ export function Shop() {
   }, [language, t]);
 
   const deliveredOn = useMemo(() => deliveryDate(), []);
+  const saleEnds = useMemo(() => saleEndDate(saleDays), [saleDays]);
   const itemCount = Object.values(cart).reduce<number>(
     (sum, quantity) => sum + (quantity ?? 0),
     0,
@@ -77,15 +81,43 @@ export function Shop() {
               </button>
             ))}
           </nav>
-          <p className="cart-count" aria-live="polite">
+          <a className="cart-count" href="#summary-title" aria-live="polite">
+            <span key={itemCount} className="cart-badge" aria-hidden="true">
+              {itemCount}
+            </span>
             {t("cartCount", { count: itemCount })}
-          </p>
+          </a>
         </div>
       </header>
 
-      <p className="sale" role="status">
-        {t("saleDays", { count: saleDaysLeft })}
-      </p>
+      <div className="sale-panel">
+        <div className="sale-text">
+          <p className="sale" role="status">
+            {t("saleDays", { count: saleDays })}
+          </p>
+          <p className="sale-date">
+            {t("saleDate", {
+              date: saleEnds,
+              formatParams: { date: dateFormat },
+            })}
+          </p>
+        </div>
+        <div className="sale-adjust">
+          <button
+            type="button"
+            onClick={() => setSaleDays((days) => Math.max(0, days - 1))}
+            disabled={saleDays === 0}
+          >
+            {t("saleEarlier")}
+          </button>
+          <button
+            type="button"
+            onClick={() => setSaleDays((days) => days + 1)}
+          >
+            {t("saleLater")}
+          </button>
+        </div>
+      </div>
 
       <div className="columns">
         <section aria-labelledby="products-title">
@@ -93,33 +125,43 @@ export function Shop() {
           <ul className="products">
             {products.map((product) => {
               const name = t(`products.${product.id}.name`);
+              const quantity = cart[product.id] ?? 0;
               return (
-                <li key={product.id} className="product">
-                  <span
-                    className="swatch"
-                    style={{ background: product.swatch }}
-                    aria-hidden="true"
-                  />
-                  <div>
-                    <h3>{name}</h3>
-                    <p className="detail">{t(`products.${product.id}.detail`)}</p>
+                <li
+                  key={product.id}
+                  className="product"
+                  style={{ "--swatch": product.swatch } as CSSProperties}
+                >
+                  <div className="art">
+                    <ProductArt id={product.id} />
+                    {quantity > 0 && (
+                      <span className="in-cart" aria-hidden="true">
+                        {t("pieces", { count: quantity })}
+                      </span>
+                    )}
                   </div>
-                  <div className="buy">
+                  <div className="product-body">
+                    <div>
+                      <h3>{name}</h3>
+                      <p className="detail">
+                        {t(`products.${product.id}.detail`)}
+                      </p>
+                    </div>
                     <p className="price">
                       {t("price", {
                         price: product.price,
                         formatParams: { price: currencyFormat },
                       })}
                     </p>
-                    <button
-                      type="button"
-                      className="add"
-                      onClick={() => add(product.id)}
-                      aria-label={t("addNamed", { name })}
-                    >
-                      {t("add")}
-                    </button>
                   </div>
+                  <button
+                    type="button"
+                    className="add"
+                    onClick={() => add(product.id)}
+                    aria-label={t("addNamed", { name })}
+                  >
+                    {t("add")}
+                  </button>
                 </li>
               );
             })}
@@ -136,35 +178,52 @@ export function Shop() {
                 const name = t(`products.${line.id}.name`);
                 return (
                   <li key={line.id} className="line">
-                    <span>{name}</span>
-                    <span className="pieces">
-                      {t("pieces", { count: line.quantity })}
-                    </span>
-                    <button
-                      type="button"
-                      className="remove"
-                      onClick={() => remove(line.id)}
-                      aria-label={t("removeNamed", { name })}
-                    >
-                      {t("remove")}
-                    </button>
+                    <span
+                      className="line-dot"
+                      style={{ background: line.swatch }}
+                      aria-hidden="true"
+                    />
+                    <div className="line-main">
+                      <span className="line-name">{name}</span>
+                      <span className="pieces">
+                        {t("pieces", { count: line.quantity })}
+                      </span>
+                    </div>
+                    <div className="line-end">
+                      <span className="line-price">
+                        {t("price", {
+                          price: line.price * line.quantity,
+                          formatParams: { price: currencyFormat },
+                        })}
+                      </span>
+                      <button
+                        type="button"
+                        className="remove"
+                        onClick={() => remove(line.id)}
+                        aria-label={t("removeNamed", { name })}
+                      >
+                        {t("remove")}
+                      </button>
+                    </div>
                   </li>
                 );
               })}
             </ul>
           )}
-          <p className="total" aria-live="polite">
-            {t("total", {
-              total,
-              formatParams: { total: currencyFormat },
-            })}
-          </p>
-          <p className="delivery">
-            {t("delivery", {
-              date: deliveredOn,
-              formatParams: { date: dateFormat },
-            })}
-          </p>
+          <div className="checkout">
+            <p className="total" aria-live="polite">
+              {t("total", {
+                total,
+                formatParams: { total: currencyFormat },
+              })}
+            </p>
+            <p className="delivery">
+              {t("delivery", {
+                date: deliveredOn,
+                formatParams: { date: dateFormat },
+              })}
+            </p>
+          </div>
         </aside>
       </div>
     </div>

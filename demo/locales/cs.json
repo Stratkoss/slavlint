@@ -1,5 +1,5 @@
 {
-  "shopName": "Lada",
+  "shopName": "online-shop",
   "greeting": "Dobrý den, {{firstName}}",
   "cartCount_one": "V košíku je {{count}} položka",
   "cartCount_few": "V košíku jsou {{count}} položky",
@@ -9,6 +9,9 @@
   "saleDays_few": "Sleva končí za {{count}} dny.",
   "saleDays_many": "Sleva končí za {{count}} dne.",
   "saleDays_other": "Sleva končí za {{count}} dní.",
+  "saleDate": "Konec slevy {{date, datetime}}.",
+  "saleEarlier": "O den dřív",
+  "saleLater": "O den později",
   "language": "Jazyk",
   "langCs": "Čeština",
   "langPl": "Polski",

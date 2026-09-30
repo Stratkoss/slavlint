@@ -1,4 +1,4 @@
-# Lada
+# online-shop
 
 A small Next.js shop demo. The interface is in Czech and Polish through i18next.
 

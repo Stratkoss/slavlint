@@ -1,16 +1,11 @@
 import type { Metadata } from "next";
-import { Figtree, Literata } from "next/font/google";
+import { Schibsted_Grotesk } from "next/font/google";
 import cs from "../locales/cs.json";
 import "./globals.css";
 
-const figtree = Figtree({
+const schibsted = Schibsted_Grotesk({
   subsets: ["latin", "latin-ext"],
-  variable: "--font-figtree",
-});
-
-const literata = Literata({
-  subsets: ["latin", "latin-ext"],
-  variable: "--font-literata",
+  variable: "--font-schibsted",
 });
 
 export const metadata: Metadata = {
@@ -19,7 +14,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="cs" className={`${figtree.variable} ${literata.variable}`}>
+    <html lang="cs" className={schibsted.variable}>
       <body>{children}</body>
     </html>
   );

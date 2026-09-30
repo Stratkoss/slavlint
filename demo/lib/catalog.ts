@@ -11,8 +11,15 @@ export const shopper = {
   firstName: "Anna",
 };
 
-/** Five days from today, so the sale notice always has a live plural. */
-export const saleDaysLeft = 5;
+/** Five days from today, so the sale notice starts on a plural form. */
+export const initialSaleDays = 5;
+
+export function saleEndDate(days: number, from = new Date()): Date {
+  const date = new Date(from);
+  date.setHours(12, 0, 0, 0);
+  date.setDate(date.getDate() + days);
+  return date;
+}
 
 export function deliveryDate(from = new Date()): Date {
   const date = new Date(from);
